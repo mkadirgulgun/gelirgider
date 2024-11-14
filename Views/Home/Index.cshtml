@@ -1,0 +1,187 @@
+﻿<style>
+    /* Flexbox ile modalları ve grafikleri yan yana getirme */
+    .main-container {
+        display: flex;
+        justify-content: space-between; /* Modallar ve grafikler yan yana */
+        align-items: flex-start;
+    }
+
+    .modal-section {
+        width: 48%; /* Her bir modal ve grafik seti için genişlik */
+    }
+
+    .modal img {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+    }
+
+    .modal-dialog {
+        max-width: 300px;
+        margin: 1.75rem auto;
+    }
+
+    .chart-container {
+        width: 100%; /* Grafik genişliği */
+        height: 500px; /* Grafik yüksekliği */
+        margin-bottom: 20px; /* Grafikler arasında boşluk */
+    }
+
+    /* Buton ve grafiği üst üste getirme */
+    .modal-chart-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: space-between;
+    }
+    /* Toplam gelir/gider görsel ayarları */
+    .total-amount {
+        font-size: 18px; /* Yazı boyutu */
+        font-weight: bold; /* Kalın yazı */
+        color: #343a40; /* Yazı rengi */
+        background-color: #e9ecef; /* Arka plan rengi */
+        padding: 10px 15px; /* İç boşluk */
+        border-radius: 5px; /* Köşe yuvarlatma */
+        text-align: center; /* Ortala */
+        margin-top: 10px; /* Üst boşluk */
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    }
+
+</style>
+
+<div class="main-container">
+    <!-- Gelir Modal ve Grafik -->
+    <div class="modal-section">
+        <div class="modal-chart-container">
+            <button class="flex items-center text-blue-500 hover:text-blue-600 ml-4" data-bs-toggle="modal" data-bs-target="#IncomeModal">
+                Gelir Ekle
+            </button>
+
+            <div class="chart-container" id="incomeChartContainer"></div>
+            <p class ="total-amount">Toplam Gelir: @ViewBag.TotalIncome TL</p>
+        </div>
+
+        <div class="modal fade" id="IncomeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Çıkış"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-controller="Home" asp-action="AddIncome" method="post" autocomplete="off">
+                            <label for="Income">Gelir</label>
+                            <p><input type="text" required id="Income" name="Income" /></p>
+
+                            <label for="IncomePrice">Fiyat</label>
+                            <p><input type="text" required id="IncomePrice" name="IncomePrice" /></p>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Çıkış</button>
+                                <button type="submit" class="btn btn-primary">Gelir Ekle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gider Modal ve Grafik -->
+    <div class="modal-section">
+        <div class="modal-chart-container">
+            <button class="flex items-center text-blue-500 hover:text-blue-600 ml-4" data-bs-toggle="modal" data-bs-target="#ExpenseModal">
+                Gider Ekle
+            </button>
+
+            <div class="chart-container" id="expenseChartContainer"></div>
+            <p class="total-amount">Toplam Gider: @ViewBag.TotalExpense TL</p>
+        </div>
+
+        <div class="modal fade" id="ExpenseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Çıkış"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-controller="Home" asp-action="AddExpense" method="post" autocomplete="off">
+                            <label for="Expense">Gider</label>
+                            <p><input type="text" required id="Expense" name="Expense" /></p>
+
+                            <label for="Price">Fiyat</label>
+                            <p><input type="text" required id="Price" name="Price" /></p>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Çıkış</button>
+                                <button type="submit" class="btn btn-primary">Gider Ekle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    string expense = "[";
+    foreach (var item in ViewBag.Expense)
+    {
+        expense += $"{{'y':{item.Price},'label':'{item.Expense}'}},";
+    }
+    expense = expense.TrimEnd(',') + "]";
+
+    string income = "[";
+    foreach (var item in ViewBag.Income)
+    {
+        income += $"{{'y':{item.IncomePrice},'label':'{item.Income}'}},";
+    }
+    income = income.TrimEnd(',') + "]";
+}
+
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<script>
+    window.onload = function () {
+        // Gelir Tablosu
+        var incomeChart = new CanvasJS.Chart("incomeChartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "Gelir Tablosu"
+            },
+            data: [{
+                type: "pie",
+                startAngle: 240,
+                yValueFormatString: "##0.00\"TL\"",
+                indexLabel: "{label} {y}",
+                dataPoints: @Html.Raw(income)
+                }]
+        });
+        incomeChart.render();
+
+        // Gider Tablosu
+        var expenseChart = new CanvasJS.Chart("expenseChartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "Gider Tablosu"
+            },
+            data: [{
+                type: "pie",
+                startAngle: 240,
+                yValueFormatString: "##0.00\"TL\"",
+                indexLabel: "{label} {y}",
+                dataPoints: @Html.Raw(expense)
+                }]
+        });
+        expenseChart.render();
+    }
+</script>

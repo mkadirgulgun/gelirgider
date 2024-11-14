@@ -1,0 +1,67 @@
+﻿<style>
+    /* Additional styles for login and registration forms */
+    .container {
+        margin-top: 80px;
+    }
+
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+    .text-center a {
+        color: #007bff;
+    }
+
+        .text-center a:hover {
+            color: #0056b3;
+        }
+
+</style>
+@if (ViewData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @ViewData["Error"]
+    </div>
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Login</h5>
+                    <form method="post" action="/Login/Login">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" name="Email" placeholder="E-Posta Adresinizi Giriniz" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="Password" placeholder="Sifrenizi Giriniz" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-4">Giris Yap</button>
+                    </form>
+                    <p>@ViewData["Error"]</p>
+                    <p class="text-center mt-3">
+                        <a href="/Login/Register">Hesabiniz yok mu? Kayit ol</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

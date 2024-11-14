@@ -1,0 +1,25 @@
+﻿@model IncomeModel
+@{
+    Layout = "_Layout";
+}
+<h2 class="mb-4">Gelir Düzenle</h2>
+
+<form class="row g-3" method="post">
+    <div class="mb-3">
+        <label class="form-label">Gelir Adı</label>
+        <input required type="text" value="@Model.Income" class="form-control" name="Income">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fiyat</label>
+        <input required type="text" value="@Model.IncomePrice" class="form-control" name="IncomePrice">
+    </div>
+    <button class="btn btn-success">Düzenle</button>
+</form>
+
+
+
+
+
+
+
+

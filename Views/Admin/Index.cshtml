@@ -1,0 +1,51 @@
+﻿@model ChartModel
+
+<h2>Gelirler</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col" width="40%">Gelir Adı</th>
+            <th scope="col" width="20%">Miktar</th>
+            <th scope="col" width="20%">#</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var income in Model.Income)  
+        {
+            <tr>
+                <td>@income.Income</td>
+                <td>@income.IncomePrice</td>
+                <td>
+                    <a href="/admin/EditIncome/@income.Id" class="btn btn-primary">Düzenle</a>
+                    <a href="/admin/DeleteIncome/@income.Id" onclick="return confirm('Bu geliri silmek istediğinize emin misiniz?')" class="btn btn-danger">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Giderler</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col" width="40%">Gider Adı</th>
+            <th scope="col" width="20%">Miktar</th>
+            <th scope="col" width="20%">#</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var expense in Model.Expense)
+        {
+            <tr>
+                <td>@expense.Expense</td>
+                <td>@expense.Price</td>
+                <td>
+                    <a href="/admin/EditExpense/@expense.Id" class="btn btn-primary">Düzenle</a>
+                    <a href="/admin/DeleteExpense/@expense.Id" onclick="return confirm('Bu gideri silmek istediğinize emin misiniz?')" class="btn btn-danger">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
